@@ -1,0 +1,36 @@
+
+//property seeks to determine the maximum time until any of the statuse become activated
+Pmax=? [ F (status = Activated ) | ( status_2 = Activated )
+       | ( status_3 = Activated )| ( status_4 = Activated )
+       | (status_5= Activated ) | (  status_6 = Activated) ]
+//Property calculates the maximum time until any of the statuses become 'Activated', 
+//restricting the evaluation within the first 100 time units.
+Pmax=? [  F<=100 ( status = Activated) | ( status_2 = Activated ) | 
+        ( status_3 = Activated ) | ( status_4 = Activated) |
+        ( status_5 = Activated ) | ( status_6 = Activated ) ]
+//property calculates the maximum time until any of the statuses become 'Activated', 
+//assigning a vote value of 1 to each activated status.
+Pmax=? [ F (status = Activated => vote = 1)| (status_2 = Activated => vote = 1 ) |
+           (status_3 = Activated => vote = 1 ) | (status_4 = Activated => vote = 1 )
+           | (status_5 = Activated => vote = 1) |( status_6 = Activated => vote = 1 ) ]
+
+
+//votes_cast' equals 2 for each activated status
+Pmax=? [ F (status = Activated => votes_cast = 2 )| (status = Activated => votes_cast = 2 ) |
+           (status = Activated => votes_cast = 2  ) | (status = Activated => votes_cast = 2  )
+           | (status = Activated => votes_cast = 2 ) |( status = Activated => votes_cast = 2 ) ]
+
+
+//property calculates the maximum time until 'Activated' status transitions to 
+//'Exited' with a penalty less than or equal to 16.
+Pmax=? [ F ( status = Activated  => status = Exited & penalty <= 16)| (status = Activated  => status = Exited & penalty <= 16 ) |
+           ( status = Activated  => status = Exited & penalty <= 16  ) | (status = Activated  => status = Exited & penalty <= 16  )
+           | ( status = Activated  => status = Exited & penalty <= 16 ) |(  status = Activated  => status = Exited & penalty <= 16 ) ]
+
+
+//property aims to find the maximum time where the status is not simultaneously 
+//'Activated' and 'Exiting', evaluating the condition over time.
+Pmax=? [ F  G !(status=Activated & status=Exiting)| (status=Activated & status=Exiting) |
+        (status=Activated & status=Exiting) | (status=Activated & status=Exiting)
+           | (G !(status=Activated & status=Exiting)) | (status=Activated & status=Exiting) ]
+
