@@ -1,0 +1,52 @@
+Pmax=? [ F (status = Activated =>  (votes_cast  > 0)) ]
+
+//Validators Eventually Exit
+Pmax=? [ G (status = Exiting => (exit_epoch > 0)) ]
+
+//Validators Eventually Withdraw
+Pmax=? [ G (status = Exited =>  (withdrawable_epoch > 0)) ]
+
+//Safety Properties:
+//No Double Voting
+Pmax=? [ G (status = Activated => !(votes_cast = 2)) ]
+
+
+//Validators Cannot Withdraw Before Exiting
+Pmax=? [ G  ((status = Activated) & (withdrawable_epoch > 0) =>  (status = Exiting)) ]
+
+//Validators Cannot Activate if Already Activated
+Pmax=? [ G (status = Activated => 
+    !(status = 1 & deposit_slot < MAX_SLOTS_PER_EPOCH 
+      & (activation_eligibility_epoch <= FINALIZED_CHECKPOINT_EPOCH) 
+      & (activation_epoch = 0) & activated_in_epoch <= churn_limit)) ]
+
+//Validators Eventually Activate
+Pmax=? [F G (status = Deposit =>  (status = Activated)) ]
+
+
+//Validators Cannot Exit Without Entering Exiting State
+Pmax=? [F G ((status = Activated) & (exit_epoch = 0) => (status = Exiting)) ]
+
+//Validators' Activation Process Eventually Completes:
+Pmax=? [G F (status = Deposit => (status = Activated)) ]
+
+
+
+//Validators Cannot Exit Without Entering Exiting State
+Pmax=? [  G ((status = Activated) & (exit_epoch = 0) =>  (status = Exiting)) ]
+
+//Validators Withdraw Within Limited Time After Exiting
+Pmax=? [ G ((status = Exited) & (withdrawable_epoch > 0)) => (status = Withdrawn) ]
+
+
+//Validators Exit After Withdrawal
+Pmax=? [ G ((status = Withdrawn) & (exit_epoch = 0) =>  (status = Exiting)) ]
+
+
+
+
+
+
+
+
+
